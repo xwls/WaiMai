@@ -1,16 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     tools:context=".activity.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
-</RelativeLayout>
+    <FrameLayout
+        android:id="@+id/frame"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@android:color/white"
+        android:layout_weight="1"/>
+
+    <RadioGroup
+        android:id="@+id/rg_tab"
+        android:paddingTop="4dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="50dp">
+        <com.oaec.waimai.widget.MyRadioButton
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:button="@null"
+            app:drawableTop="@drawable/sel_tab_rb_home"
+            app:drawableTopWidth="24dp"
+            app:drawableTopHeight="24dp"
+            android:textSize="12sp"
+            android:textColor="@drawable/sel_tab_text"
+            android:gravity="center"
+            android:layout_height="50dp"
+            android:text="@string/tab_home"/>
+        <com.oaec.waimai.widget.MyRadioButton
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:button="@null"
+            app:drawableTop="@drawable/sel_tab_rb_order"
+            app:drawableTopWidth="24dp"
+            app:drawableTopHeight="24dp"
+            android:textSize="12sp"
+            android:textColor="@drawable/sel_tab_text"
+            android:gravity="center"
+            android:layout_height="50dp"
+            android:text="@string/tab_order"/>
+        <com.oaec.waimai.widget.MyRadioButton
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:button="@null"
+            app:drawableTop="@drawable/sel_tab_rb_mine"
+            app:drawableTopWidth="24dp"
+            app:drawableTopHeight="24dp"
+            android:textSize="12sp"
+            android:textColor="@drawable/sel_tab_text"
+            android:gravity="center"
+            android:layout_height="50dp"
+            android:text="@string/tab_mine"/>
+    </RadioGroup>
+</LinearLayout>
