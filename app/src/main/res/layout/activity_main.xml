@@ -21,40 +21,25 @@
         android:orientation="horizontal"
         android:layout_height="50dp">
         <com.oaec.waimai.widget.MyRadioButton
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:button="@null"
+            android:id="@+id/rb_home"
             app:drawableTop="@drawable/sel_tab_rb_home"
             app:drawableTopWidth="24dp"
             app:drawableTopHeight="24dp"
-            android:textSize="12sp"
-            android:textColor="@drawable/sel_tab_text"
-            android:gravity="center"
-            android:layout_height="50dp"
-            android:text="@string/tab_home"/>
+            android:text="@string/tab_home"
+            style="@style/rb_tab"/>
         <com.oaec.waimai.widget.MyRadioButton
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:button="@null"
+            android:id="@+id/rb_order"
             app:drawableTop="@drawable/sel_tab_rb_order"
             app:drawableTopWidth="24dp"
             app:drawableTopHeight="24dp"
-            android:textSize="12sp"
-            android:textColor="@drawable/sel_tab_text"
-            android:gravity="center"
-            android:layout_height="50dp"
-            android:text="@string/tab_order"/>
+            android:text="@string/tab_order"
+            style="@style/rb_tab"/>
         <com.oaec.waimai.widget.MyRadioButton
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:button="@null"
+            android:id="@+id/rb_mine"
             app:drawableTop="@drawable/sel_tab_rb_mine"
             app:drawableTopWidth="24dp"
             app:drawableTopHeight="24dp"
-            android:textSize="12sp"
-            android:textColor="@drawable/sel_tab_text"
-            android:gravity="center"
-            android:layout_height="50dp"
-            android:text="@string/tab_mine"/>
+            android:text="@string/tab_mine"
+            style="@style/rb_tab" />
     </RadioGroup>
 </LinearLayout>
