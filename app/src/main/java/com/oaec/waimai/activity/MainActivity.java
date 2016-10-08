@@ -1,7 +1,9 @@
-package com.oaec.waimai;
+package com.oaec.waimai.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.oaec.waimai.R;
 
 public class MainActivity extends AppCompatActivity {
 
