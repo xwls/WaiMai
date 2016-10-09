@@ -1,8 +1,11 @@
 package com.oaec.waimai.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
@@ -10,6 +13,7 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.oaec.waimai.R;
+import com.oaec.waimai.activity.AddressActivity;
 import com.umeng.analytics.MobclickAgent;
 
 import org.xutils.view.annotation.ContentView;
@@ -21,9 +25,10 @@ import org.xutils.x;
  * Description：首页的Fragment
  */
 @ContentView(R.layout.fragment_home)
-public class HomeFragment extends BaseFragment {
+public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     private static final String TAG = "HomeFragment";
+    private static final int REQ_ADDRESS = 0x11;
     @ViewInject(R.id.tv_address)
     private TextView tv_address;
     //声明AMapLocationClient类对象
@@ -32,11 +37,15 @@ public class HomeFragment extends BaseFragment {
     private AMapLocationListener mLocationListener = null;
     //声明AMapLocationClientOption对象
     private AMapLocationClientOption mLocationOption = null;
+    private double latitude;//经度
+    private double longitude;//纬度
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initAmap();
         mLocationClient.startLocation();
+        tv_address.setOnClickListener(this);
     }
 
     private void initAmap() {
@@ -47,8 +56,10 @@ public class HomeFragment extends BaseFragment {
                     if(aMapLocation.getErrorCode() == 0){
 //                        String locationDetail = aMapLocation.getLocationDetail();
                         StringBuffer sb = new StringBuffer();
-                        sb.append("\n纬度:"+aMapLocation.getLatitude());
-                        sb.append("\n经度:"+aMapLocation.getLongitude());
+                        latitude = aMapLocation.getLatitude();
+                        longitude = aMapLocation.getLongitude();
+                        sb.append("\n纬度:"+ latitude);
+                        sb.append("\n经度:"+ longitude);
                         sb.append("\n精度:"+aMapLocation.getAccuracy());
                         sb.append("\n海拔:"+aMapLocation.getAltitude());
                         sb.append("\n方向角:"+aMapLocation.getBearing());
@@ -68,7 +79,7 @@ public class HomeFragment extends BaseFragment {
                         sb.append("\n定位错误信息描述:"+aMapLocation.getErrorInfo());
                         sb.append("\n定位错误码:"+aMapLocation.getErrorCode());
                         Log.d(TAG, "onLocationChanged: "+sb);
-                        tv_address.setText("送至："+aMapLocation.getPoiName());
+                        tv_address.setText("送至："+aMapLocation.getAoiName());
                     }else {
                         String errorInfo = aMapLocation.getErrorInfo();
                         Log.e(TAG, "onLocationChanged: "+errorInfo);
@@ -109,5 +120,30 @@ public class HomeFragment extends BaseFragment {
     public void onPause() {
         super.onPause();
         MobclickAgent.onPageEnd("首页");
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.tv_address:
+                Intent intent = new Intent(x.app(), AddressActivity.class);
+                intent.putExtra("latitude",latitude);
+                intent.putExtra("longitude",longitude);
+                startActivityForResult(intent,REQ_ADDRESS);
+                break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case REQ_ADDRESS:
+                if(resultCode == Activity.RESULT_OK){
+                    String address = data.getStringExtra("address");
+                    tv_address.setText("送至："+address);
+                }
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

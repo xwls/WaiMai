@@ -25,5 +25,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'org.xutils:xutils:3.3.34'
     compile 'com.umeng.analytics:analytics:latest.integration'
-    compile files('libs/AMap2DMap_2.9.1_AMapSearch_3.5.0_AMapLocation_3.0.0_20160927.jar')
+    compile files('libs/AMap_Location_V3.00_20160922.jar')
+    compile files('libs/AMap_Search_V3.5.0_20160927.jar')
 }
