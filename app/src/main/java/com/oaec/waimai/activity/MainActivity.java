@@ -14,6 +14,7 @@ import com.oaec.waimai.adapter.FragmentTabAdapter;
 import com.oaec.waimai.fragment.HomeFragment;
 import com.oaec.waimai.fragment.MineFragment;
 import com.oaec.waimai.fragment.OrderFragment;
+import com.umeng.analytics.MobclickAgent;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -71,6 +72,18 @@ public class MainActivity extends FragmentActivity {
                 Log.d(TAG, "OnRgsExtraCheckedChanged() called with: " + "radioGroup = [" + radioGroup + "], checkedId = [" + checkedId + "], index = [" + index + "]");
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(x.app());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(x.app());
     }
 
     @Override
