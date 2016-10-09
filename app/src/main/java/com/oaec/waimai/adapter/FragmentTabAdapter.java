@@ -6,8 +6,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.widget.RadioGroup;
 
-import com.oaec.waimai.R;
-
 import java.util.List;
 
 public class FragmentTabAdapter implements RadioGroup.OnCheckedChangeListener {
@@ -77,13 +75,13 @@ public class FragmentTabAdapter implements RadioGroup.OnCheckedChangeListener {
     private FragmentTransaction obtainFragmentTransaction(int index) {
         FragmentTransaction ft = fragmentActivity.getSupportFragmentManager()
                 .beginTransaction();
-        // 设置切换动画
-        if (index > currentTab) {
-            ft.setCustomAnimations(R.anim.slide_left_in, R.anim.slide_left_out);
-        } else {
-            ft.setCustomAnimations(R.anim.slide_right_in,
-                    R.anim.slide_right_out);
-        }
+//        // 设置切换动画
+//        if (index > currentTab) {
+//            ft.setCustomAnimations(R.anim.slide_left_in, R.anim.slide_left_out);
+//        } else {
+//            ft.setCustomAnimations(R.anim.slide_right_in,
+//                    R.anim.slide_right_out);
+//        }
         return ft;
     }
 

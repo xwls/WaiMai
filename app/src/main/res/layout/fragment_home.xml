@@ -1,12 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="首页"
-        android:id="@+id/textView"
-        android:layout_gravity="center_horizontal" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimary">
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="送至：正在定位"
+            android:maxLength="14"
+            android:singleLine="true"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:textColor="@android:color/white"/>
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="6dp"
+            android:layout_centerInParent="true"
+            android:layout_toRightOf="@id/tv_address"
+            android:src="@drawable/ic_actionbar_address"/>
+       <ImageButton
+           android:layout_width="26dp"
+           android:layout_height="26dp"
+           android:background="@null"
+           android:src="@drawable/ic_actionbar_search"
+           android:layout_centerVertical="true"
+           android:scaleType="centerCrop"
+           android:layout_marginRight="12dp"
+           android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
 </LinearLayout>

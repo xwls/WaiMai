@@ -2,7 +2,6 @@ package com.oaec.waimai.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.RadioButton;
@@ -24,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ContentView(R.layout.activity_main)
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends CheckPermissionsActivity {
 
     private static final String TAG = "MainActivity";
     @ViewInject(R.id.rg_tab)
