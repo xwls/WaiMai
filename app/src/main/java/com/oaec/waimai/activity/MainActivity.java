@@ -70,6 +70,17 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void OnRgsExtraCheckedChanged(RadioGroup radioGroup, int checkedId, int index) {
                 Log.d(TAG, "OnRgsExtraCheckedChanged() called with: " + "radioGroup = [" + radioGroup + "], checkedId = [" + checkedId + "], index = [" + index + "]");
+                switch (index){
+                    case 0:
+                        MobclickAgent.onEvent(x.app(),"home");
+                        break;
+                    case 1:
+                        MobclickAgent.onEvent(x.app(),"order");
+                        break;
+                    case 2:
+                        MobclickAgent.onEvent(x.app(),"mine");
+                        break;
+                }
             }
         });
     }
@@ -89,7 +100,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK){
-            if(tabAdapter.getCurrentTab() != 0){
+            if(!rb_home.isChecked()){
                 rg_tab.check(R.id.rb_home);
                 return true;
             }else {
