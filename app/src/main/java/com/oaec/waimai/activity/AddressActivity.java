@@ -59,7 +59,7 @@ public class AddressActivity extends AppCompatActivity implements PoiSearch.OnPo
             @Override
             public void convert(ViewHolder holder, PoiItem poiItem) {
                 holder.setText(R.id.tv_poiTitle,poiItem.getTitle())
-                        .setText(R.id.tv_distance,"距您："+poiItem.getDistance()+"M");
+                        .setText(R.id.tv_distance,poiItem.getDistance()+"米");
             }
         };
         listView.setAdapter(adapter);

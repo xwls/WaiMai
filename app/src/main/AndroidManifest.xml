@@ -47,7 +47,7 @@
         <service android:name="com.amap.api.location.APSService" />
 
         <activity android:name=".activity.AddressActivity"
-            android:label="选择地址"></activity>
+            android:label="@string/title_address"></activity>
     </application>
 
 </manifest>

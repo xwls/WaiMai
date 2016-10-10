@@ -7,4 +7,6 @@
     <string name="notifyMsg">当前应用缺少必要权限。\n\n请点击\"设置\"-\"权限\"-打开所需权限。</string>
     <string name="cancel">取消</string>
     <string name="setting">设置</string>
+    <string name="title_address">选择配送地址</string>
+    <string name="home_address">送至：正在定位</string>
 </resources>
