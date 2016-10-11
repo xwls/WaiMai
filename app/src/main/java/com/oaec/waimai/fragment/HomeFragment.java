@@ -1,24 +1,36 @@
 package com.oaec.waimai.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.oaec.waimai.R;
 import com.oaec.waimai.activity.AddressActivity;
+import com.oaec.waimai.entity.BannerBean;
+import com.oaec.waimai.util.WaiMaiConfig;
 import com.umeng.analytics.MobclickAgent;
+import com.youth.banner.Banner;
+import com.youth.banner.loader.ImageLoader;
 
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Kevin on 2016/10/8.
@@ -39,6 +51,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private AMapLocationClientOption mLocationOption = null;
     private double latitude;//经度
     private double longitude;//纬度
+    @ViewInject(R.id.banner)
+    private Banner banner;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -46,7 +60,51 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         initAmap();
         mLocationClient.startLocation();
         tv_address.setOnClickListener(this);
+        initBanner();
     }
+
+    class GlideImageLoader implements ImageLoader {
+
+        @Override
+        public void displayImage(Context context, Object path, ImageView imageView) {
+            x.image().bind(imageView, path.toString());
+
+        }
+    }
+
+    private void initBanner() {
+        RequestParams params = new RequestParams(WaiMaiConfig.URL_BANNER);
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                List<BannerBean> banners = JSON.parseArray(result, BannerBean.class);
+                List<String> images = new ArrayList<String>();
+                for (BannerBean b :  banners) {
+                    images.add(b.getUrl());
+                }
+                banner.setImageLoader(new GlideImageLoader());
+                banner.setImages(images);
+                banner.setDelayTime(3000);
+                banner.start();
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
+
 
     private void initAmap() {
         mLocationListener = new AMapLocationListener() {
@@ -54,31 +112,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             public void onLocationChanged(AMapLocation aMapLocation) {
                 if (aMapLocation != null) {
                     if(aMapLocation.getErrorCode() == 0){
-//                        String locationDetail = aMapLocation.getLocationDetail();
                         StringBuffer sb = new StringBuffer();
                         latitude = aMapLocation.getLatitude();
                         longitude = aMapLocation.getLongitude();
-                        sb.append("\n纬度:"+ latitude);
-                        sb.append("\n经度:"+ longitude);
-                        sb.append("\n精度:"+aMapLocation.getAccuracy());
-                        sb.append("\n海拔:"+aMapLocation.getAltitude());
-                        sb.append("\n方向角:"+aMapLocation.getBearing());
-                        sb.append("\n地址描述:"+aMapLocation.getAddress());
-                        sb.append("\n国家:"+aMapLocation.getCountry());
-                        sb.append("\n省:"+aMapLocation.getProvince());
-                        sb.append("\n城市:"+aMapLocation.getCity());
-                        sb.append("\n城区:"+aMapLocation.getDistrict());
-                        sb.append("\n街道:"+aMapLocation.getStreet());
-                        sb.append("\n街道门牌号:"+aMapLocation.getStreetNum());
-                        sb.append("\n城市编码:"+aMapLocation.getCityCode());
-                        sb.append("\n区域编码:"+aMapLocation.getAdCode());
-                        sb.append("\n当前位置POI名称:"+aMapLocation.getPoiName());
-                        sb.append("\n当前位置所处AOI名称:"+aMapLocation.getAoiName());
-                        sb.append("\n定位来源:"+aMapLocation.getLocationType());
-                        sb.append("\n定位信息描述:"+aMapLocation.getLocationDetail());
-                        sb.append("\n定位错误信息描述:"+aMapLocation.getErrorInfo());
-                        sb.append("\n定位错误码:"+aMapLocation.getErrorCode());
-                        Log.d(TAG, "onLocationChanged: "+sb);
                         tv_address.setText("送至："+aMapLocation.getAoiName());
                     }else {
                         String errorInfo = aMapLocation.getErrorInfo();

@@ -5,7 +5,7 @@
     android:orientation="horizontal">
 
     <TextView
-        android:textColor="#6b6b6b"
+        android:textColor="#464646"
         android:id="@+id/tv_poiTitle"
         android:layout_width="0dp"
         android:layout_height="50dp"
@@ -19,13 +19,12 @@
         android:text="创意大厦"/>
 
     <TextView
-        android:paddingLeft="8dp"
-        android:textColor="#6b6b6b"
+        android:textColor="#848484"
         android:id="@+id/tv_distance"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_weight="1"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:textSize="12sp"
         android:text="100M" />
 
