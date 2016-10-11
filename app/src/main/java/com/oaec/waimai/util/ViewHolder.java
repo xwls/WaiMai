@@ -5,6 +5,7 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.oaec.waimai.R;
@@ -68,16 +69,30 @@ public class ViewHolder {
         return this;
     }
 
-    public void setImageResource(int viewId, int resId) {
-        ImageView view = getView(viewId, ImageView.class);
-        view.setImageResource(resId);
+    public ViewHolder setText(int viewId, int text) {
+        TextView view = getView(viewId, TextView.class);
+        view.setText(text+"");
+        return this;
+    }
+
+    public ViewHolder setText(int viewId, float text) {
+        TextView view = getView(viewId, TextView.class);
+        view.setText(text+"");
+        return this;
+    }
+
+
+    public ViewHolder setRating(int viewId, float rating) {
+        RatingBar view = getView(viewId, RatingBar.class);
+        view.setRating(rating);
+        return this;
     }
 
     public ViewHolder setImageUrl(int viewId,String url){
         ImageView view = getView(viewId, ImageView.class);
         ImageOptions options = new ImageOptions.Builder()
-                .setSize(DensityUtil.dip2px(120),DensityUtil.dip2px(80))//设置宽高
-                .setRadius(DensityUtil.dip2px(5))//设置圆角
+                .setSize(DensityUtil.dip2px(80),DensityUtil.dip2px(80))//设置宽高
+//                .setRadius(DensityUtil.dip2px(5))//设置圆角
                 .setImageScaleType(ImageView.ScaleType.CENTER_CROP)//图片拉伸显示
                 .setUseMemCache(true)//使用缓存
                 .setLoadingDrawableId(R.mipmap.ic_launcher)//加载时显示的图片

@@ -40,11 +40,36 @@
            android:layout_alignParentEnd="true"/>
     </RelativeLayout>
 
-    <com.youth.banner.Banner
-        android:id="@+id/banner"
+    <ScrollView
+        android:id="@+id/sv_home"
         android:layout_width="match_parent"
-        android:layout_height="160dp">
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <com.youth.banner.Banner
+                android:id="@+id/banner"
+                android:layout_width="match_parent"
+                android:layout_height="140dp">
 
-    </com.youth.banner.Banner>
+            </com.youth.banner.Banner>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/merchant"
+                android:textSize="16sp"
+                android:textColor="@color/text_1"
+                android:padding="2dp"
+                android:gravity="center_vertical"
+                android:text="  附近商家"/>
+            <com.oaec.waimai.widget.LoadListView
+                android:id="@+id/lv_home_merchant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></com.oaec.waimai.widget.LoadListView>
+        </LinearLayout>
+    </ScrollView>
+
+
 
 </LinearLayout>
