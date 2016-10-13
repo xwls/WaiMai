@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="90dp"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/iv_img"
+        android:layout_width="82dp"
+        android:layout_height="82dp"
+        android:layout_margin="4dp"
+        android:src="@mipmap/ic_launcher"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="90dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:text="金针菇"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#535353"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:gravity="center_vertical"/>
+        <TextView
+            android:id="@+id/tv_xl"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:textSize="12sp"
+            android:textColor="#666"
+            android:gravity="center_vertical"
+            android:text="月售2份"/>
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:textColor="#ff2e4b"
+            android:text="￥8"/>
+    </LinearLayout>
+
+
+
+</LinearLayout>

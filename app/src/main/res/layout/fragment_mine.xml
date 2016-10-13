@@ -1,12 +1,226 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TextView
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="个人中心"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+
+        <ImageButton
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:padding="10dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_mine_setting" />
+
+        <com.wx.ovalimageview.RoundImageView
+            android:id="@+id/riv_border"
+            android:visibility="invisible"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/user"
+            app:border_color="#FFFFFF"
+            app:border_width="3dp"
+            app:circle="true"/>
+        <ImageView
+            android:id="@+id/iv_img"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/user"
+            android:layout_centerInParent="true"/>
+        <Button
+            android:id="@+id/btn_toLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/iv_img"
+            android:layout_marginTop="8dp"
+            android:text="登录/注册"/>
+
+        <TextView
+            android:id="@+id/tv_nickName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/iv_img"
+            android:layout_marginTop="14dp"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            android:visibility="invisible"
+            android:text="登录/注册"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rl_intergral"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/textunused"
+        android:layout_marginTop="40dp"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/iv_intergral"
+            android:layout_width="16sp"
+            android:layout_height="16sp"
+            android:contentDescription="@string/content_desc"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/usercenterstar"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_toRightOf="@+id/iv_intergral"
+            android:layout_marginLeft="5dp"
+            android:text="@string/myintergal"/>
+
+        <ImageView
+            android:id="@+id/iv_right"
+            android:layout_width="14sp"
+            android:layout_height="14sp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/rightlinear"
+            android:contentDescription="@string/content_desc"/>
+    </RelativeLayout>
+
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="我的"
-        android:id="@+id/textView"
-        android:layout_gravity="center_horizontal" />
+        android:contentDescription="@string/content_desc"
+        android:src="@drawable/shopline"
+        android:layout_gravity="center_horizontal"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_useraddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/textunused"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/iv_useraddress"
+            android:layout_width="16sp"
+            android:layout_height="16sp"
+            android:contentDescription="@string/content_desc"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/usercenterlocation"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_toRightOf="@+id/iv_useraddress"
+            android:layout_marginLeft="5dp"
+            android:text="@string/useraddress"/>
+
+        <ImageView
+            android:layout_width="14sp"
+            android:layout_height="14sp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/rightlinear"
+            android:contentDescription="@string/content_desc"/>
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/content_desc"
+        android:src="@drawable/shopline"
+        android:layout_gravity="center_horizontal"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_userorder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/textunused"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/iv_userorder"
+            android:layout_width="16sp"
+            android:layout_height="16sp"
+            android:contentDescription="@string/content_desc"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/usercenterorder"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_toRightOf="@+id/iv_userorder"
+            android:layout_marginLeft="5dp"
+            android:text="@string/userorder"/>
+
+        <ImageView
+            android:layout_width="14sp"
+            android:layout_height="14sp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/rightlinear"
+            android:contentDescription="@string/content_desc"/>
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/content_desc"
+        android:src="@drawable/shopline"
+        android:layout_gravity="center_horizontal"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_uservoucher"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/textunused"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/iv_uservoucher"
+            android:layout_width="16sp"
+            android:layout_height="16sp"
+            android:contentDescription="@string/content_desc"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/usercentervoucher"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_toRightOf="@+id/iv_uservoucher"
+            android:layout_marginLeft="5dp"
+            android:text="@string/uservoucher"/>
+
+        <ImageView
+            android:layout_width="14sp"
+            android:layout_height="14sp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/rightlinear"
+            android:contentDescription="@string/content_desc"/>
+    </RelativeLayout>
 </LinearLayout>

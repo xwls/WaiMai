@@ -2,6 +2,8 @@ package com.oaec.waimai.app;
 
 import android.app.Application;
 
+import com.oaec.waimai.entity.User;
+
 import org.xutils.x;
 
 /**
@@ -9,6 +11,16 @@ import org.xutils.x;
  * Description：
  */
 public class WaiMaiApplication extends Application {
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();

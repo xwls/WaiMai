@@ -31,4 +31,7 @@ dependencies {
     compile 'com.alibaba:fastjson:1.1.54.android'
     compile 'com.android.support:design:23.3.0'
     compile 'com.hedgehog.ratingbar:app:1.1.2'
+    compile 'it.neokree:MaterialTabs:0.11'
+    compile 'com.wx.ovalimageview:roundimageview:1.1.0'
+    compile 'com.rengwuxian.materialedittext:library:2.1.4'
 }

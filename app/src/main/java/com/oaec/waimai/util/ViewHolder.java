@@ -5,9 +5,9 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.hedgehog.ratingbar.RatingBar;
 import com.oaec.waimai.R;
 
 import org.xutils.common.util.DensityUtil;
@@ -53,6 +53,15 @@ public class ViewHolder {
         return (T) v;
     }
 
+    public <T extends View> T getView(int viewId) {
+        View v = mViews.get(viewId);
+        if (v == null) {
+            v = convertView.findViewById(viewId);
+            mViews.put(viewId, v);
+        }
+        return (T) v;
+    }
+
     public View getConvertView() {
         return convertView;
     }
@@ -65,6 +74,9 @@ public class ViewHolder {
      */
     public ViewHolder setText(int viewId, String text) {
         TextView view = getView(viewId, TextView.class);
+        if (text == null){
+            text = "";
+        }
         view.setText(text);
         return this;
     }
@@ -84,7 +96,13 @@ public class ViewHolder {
 
     public ViewHolder setRating(int viewId, float rating) {
         RatingBar view = getView(viewId, RatingBar.class);
-        view.setRating(rating);
+        view.setStar(rating);
+        return this;
+    }
+
+    public ViewHolder setBackgroundColor(int viewId, int color) {
+        View view = getView(viewId);
+        view.setBackgroundColor(color);
         return this;
     }
 

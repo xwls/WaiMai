@@ -50,9 +50,15 @@
             android:name=".activity.AddressActivity"
             android:label="@string/title_address" />
         <activity
-            android:name=".activity.MerchantActivity"
+            android:name=".activity.MerchantActivityXX"
             android:label="@string/title_activity_merchant"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.MerchantActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="用户登录"></activity>
     </application>
 
 </manifest>

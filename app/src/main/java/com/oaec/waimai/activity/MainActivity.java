@@ -85,15 +85,15 @@ public class MainActivity extends CheckPermissionsActivity {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(x.app());
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(x.app());
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
     }
 
     @Override

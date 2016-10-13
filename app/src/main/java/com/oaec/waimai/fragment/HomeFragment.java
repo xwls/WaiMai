@@ -168,14 +168,14 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         list = new ArrayList<Merchant>();
         adapter = new CommonAdapter<Merchant>(x.app(), list, R.layout.list_item_merchant) {
             @Override
-            public void convert(ViewHolder holder, Merchant merchant) {
+            public void convert(int position, ViewHolder holder, Merchant merchant) {
                 holder.setText(R.id.tv_name, merchant.getName())
                         .setText(R.id.tv_grade, merchant.getGrade())
                         .setText(R.id.tv_xl, "月售" + merchant.getXl() + "单")
                         .setText(R.id.tv_qs, "￥" + merchant.getQs() + "起送")
                         .setText(R.id.tv_psf, " / 配送费￥" + merchant.getPsf())
                         .setText(R.id.tv_distance, merchant.getDistance() + "米")
-                        .setRating(R.id.ratingBar, merchant.getGrade())
+                        .setRating(R.id.ratingbar, merchant.getGrade())
                         .setImageUrl(R.id.iv_img, merchant.getImg());
             }
         };

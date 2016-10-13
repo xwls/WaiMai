@@ -15,6 +15,7 @@ import com.amap.api.services.poisearch.PoiSearch;
 import com.oaec.waimai.R;
 import com.oaec.waimai.util.CommonAdapter;
 import com.oaec.waimai.util.ViewHolder;
+import com.umeng.analytics.MobclickAgent;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -57,7 +58,7 @@ public class AddressActivity extends AppCompatActivity implements PoiSearch.OnPo
         pois = poiResult.getPois();
         adapter = new CommonAdapter<PoiItem>(x.app(),pois,R.layout.list_item_address) {
             @Override
-            public void convert(ViewHolder holder, PoiItem poiItem) {
+            public void convert(int position, ViewHolder holder, PoiItem poiItem) {
                 holder.setText(R.id.tv_poiTitle,poiItem.getTitle())
                         .setText(R.id.tv_distance,poiItem.getDistance()+"米");
             }
@@ -77,5 +78,17 @@ public class AddressActivity extends AppCompatActivity implements PoiSearch.OnPo
         intent.putExtra("address",poiItem.getTitle());
         setResult(RESULT_OK,intent);
         finish();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
     }
 }
