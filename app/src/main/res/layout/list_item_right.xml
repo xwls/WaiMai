@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="90dp"
+    android:descendantFocusability="blocksDescendants"
     android:orientation="horizontal">
 
     <ImageView
@@ -35,15 +36,48 @@
             android:textColor="#666"
             android:gravity="center_vertical"
             android:text="月售2份"/>
-        <TextView
-            android:id="@+id/tv_price"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="28dp"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:gravity="center_vertical"
-            android:textColor="#ff2e4b"
-            android:text="￥8"/>
+            android:layout_height="28dp">
+            <TextView
+                android:id="@+id/tv_price"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:textColor="#ff2e4b"
+                android:text="￥8"/>
+            <TextView
+                android:id="@+id/tv_count"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:gravity="center"
+                android:text="0"
+                android:visibility="invisible"
+                android:textColor="@color/text_1"
+                android:layout_toLeftOf="@+id/ib_add"/>
+            <ImageButton
+                android:id="@+id/ib_sub"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@null"
+                android:scaleType="centerCrop"
+                android:visibility="invisible"
+                android:src="@drawable/sel_ib_sub"
+                android:layout_toLeftOf="@id/tv_count"/>
+            <ImageButton
+                android:id="@+id/ib_add"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@null"
+                android:layout_marginEnd="6dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/sel_ib_add"
+                android:layout_alignParentRight="true"/>
+
+
+        </RelativeLayout>
     </LinearLayout>
 
 

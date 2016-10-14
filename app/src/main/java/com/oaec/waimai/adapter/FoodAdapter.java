@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,6 +27,12 @@ import java.util.List;
 public class FoodAdapter extends SectionedBaseAdapter {
     private List<Food> foods;
     private Context context;
+
+    private OnConvertListener onConvertListener;
+
+    public void setOnConvertListener(OnConvertListener onConvertListener) {
+        this.onConvertListener = onConvertListener;
+    }
 
     public FoodAdapter(Context context, List<Food> foods) {
         this.context = context;
@@ -62,6 +69,9 @@ public class FoodAdapter extends SectionedBaseAdapter {
             holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
             holder.tv_xl = (TextView) convertView.findViewById(R.id.tv_xl);
             holder.tv_price = (TextView) convertView.findViewById(R.id.tv_price);
+            holder.ib_sub = (ImageButton) convertView.findViewById(R.id.ib_sub);
+            holder.tv_count = (TextView) convertView.findViewById(R.id.tv_count);
+            holder.ib_add = (ImageButton) convertView.findViewById(R.id.ib_add);
             convertView.setTag(holder);
         }else{
             holder = (ViewHolder) convertView.getTag();
@@ -75,7 +85,14 @@ public class FoodAdapter extends SectionedBaseAdapter {
         holder.tv_name.setText(foodInfo.getName());
         holder.tv_xl.setText("月售"+foodInfo.getXl()+"份");
         holder.tv_price.setText("￥"+foodInfo.getPrice());
+        if (onConvertListener != null){
+            onConvertListener.onConvert(holder,section,position);
+        }
         return convertView;
+    }
+
+    public interface OnConvertListener{
+        void onConvert(ViewHolder holder, int section, int position);
     }
 
     @Override
@@ -91,10 +108,14 @@ public class FoodAdapter extends SectionedBaseAdapter {
         ((TextView) layout.findViewById(R.id.textItem)).setText(food.getType());
         return layout;
     }
-    private class ViewHolder{
+
+    public class ViewHolder{
         ImageView iv_img;
         TextView tv_name;
         TextView tv_xl;
         TextView tv_price;
+        public ImageButton ib_sub;
+        public TextView tv_count;
+        public ImageButton ib_add;
     }
 }
