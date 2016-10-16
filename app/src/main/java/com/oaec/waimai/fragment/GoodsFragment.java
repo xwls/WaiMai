@@ -48,6 +48,11 @@ public class GoodsFragment extends BaseFragment {
     private FoodAdapter adapter;
     private boolean isScroll;
     private List<Food> foods;
+    private Add2ShoppingCartListener add2ShoppingCartListener;
+
+    public void setAdd2ShoppingCartListener(Add2ShoppingCartListener add2ShoppingCartListener) {
+        this.add2ShoppingCartListener = add2ShoppingCartListener;
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -55,7 +60,7 @@ public class GoodsFragment extends BaseFragment {
         Bundle bundle = getArguments();
         String name = bundle.getString("name");
         int id = bundle.getInt("id");
-        foods = new ArrayList<>();
+        foods = new ArrayList<Food>();
         getFoods(id);
 //        initEvent();
         LayoutInflater inflator = LayoutInflater.from(x.app());
@@ -72,8 +77,8 @@ public class GoodsFragment extends BaseFragment {
                 isScroll = false;
                 setLeft(position);
                 int rightSection = 0;
-                for(int i=0;i<position;i++){
-                    rightSection += adapter.getCountForSection(i)+1;
+                for (int i = 0; i < position; i++) {
+                    rightSection += adapter.getCountForSection(i) + 1;
                 }
                 lv_right.setSelection(rightSection);
             }
@@ -86,10 +91,10 @@ public class GoodsFragment extends BaseFragment {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if(isScroll){
+                if (isScroll) {
                     setLeft(adapter.getSectionForPosition(firstVisibleItem));
                     isScroll = false;
-                }else{
+                } else {
                     isScroll = true;
                 }
             }
@@ -106,12 +111,17 @@ public class GoodsFragment extends BaseFragment {
                         ImageButton ib_sub = holder.ib_sub;
                         ImageButton ib_add = holder.ib_add;
                         final TextView tv_count = holder.tv_count;
-                        int count = Integer.parseInt(tv_count.getText().toString());
-                        switch (v.getId()){
-                            case R.id.ib_add:
-                                if(!ib_sub.isShown()){
+                        int count = 0;
+                        String name = foodInfo.getName();
+                        if(name.indexOf("?") > 0){
+                            count = Integer.parseInt(name.substring(name.lastIndexOf("?")+1));
+                            name = name.substring(0,name.lastIndexOf("?"));
+                        }
+                        switch (v.getId()) {
+                            case R.id.ib_add://加入购物车
+                                if (!ib_sub.isShown()) {
                                     ib_sub.setVisibility(View.VISIBLE);
-
+                                    ib_sub.setEnabled(true);
                                     Animation animation = AnimationUtils.loadAnimation(x.app(), R.anim.anim_ib_sub_in);
                                     ib_sub.startAnimation(animation);
                                     animation.setAnimationListener(new Animation.AnimationListener() {
@@ -132,18 +142,31 @@ public class GoodsFragment extends BaseFragment {
                                     });
                                 }
                                 count += 1;
-                                tv_count.setText(count+"");
                                 break;
                             case R.id.ib_sub:
                                 count -= 1;
-                                tv_count.setText(count+"");
-                                if (count == 0){
-                                    ib_sub.setVisibility(View.INVISIBLE);
+                                if (count == 0) {
                                     tv_count.setVisibility(View.INVISIBLE);
                                     Animation animation = AnimationUtils.loadAnimation(x.app(), R.anim.anim_ib_sub_out);
                                     ib_sub.startAnimation(animation);
+                                    ib_sub.setVisibility(View.INVISIBLE);
+                                    ib_sub.setEnabled(false);
                                 }
                                 break;
+                        }
+                        if(count > 0){
+                            foodInfo.setName(name+"?"+count);
+                        }else {
+                            foodInfo.setName(name);
+                        }
+                        tv_count.setText(count + "");
+//                        foodInfo.setCount(count);
+//                        Log.d(TAG, "onClick: "+foodInfo+"--"+count);
+//                        adapter.notifyDataSetChanged();
+//                        FoodAdapter adapter = new FoodAdapter(x.app(), foods);
+//                        lv_right.setAdapter(adapter);
+                        if (add2ShoppingCartListener != null) {
+                            add2ShoppingCartListener.add2ShoppingCart(v, holder.iv_img, foodInfo, count);
                         }
                     }
                 };
@@ -153,9 +176,13 @@ public class GoodsFragment extends BaseFragment {
         });
     }
 
+    public interface Add2ShoppingCartListener {
+        void add2ShoppingCart(View v, ImageView imageView, FoodInfo foodInfo, int count);
+    }
+
     private void getFoods(int id) {
         RequestParams params = new RequestParams(WaiMaiConfig.URL_FOODS);
-        params.addParameter("mid",id);
+        params.addParameter("mid", id);
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
@@ -164,7 +191,7 @@ public class GoodsFragment extends BaseFragment {
                 for (int i = 0; i < foods.size(); i++) {
                     types.add(foods.get(i).getType());
                 }
-                lv_left.setAdapter(new CommonAdapter<String>(x.app(),types,R.layout.list_item_left) {
+                lv_left.setAdapter(new CommonAdapter<String>(x.app(), types, R.layout.list_item_left) {
                     @Override
                     public void convert(int position, ViewHolder holder, String s) {
 //                        if(position == 0){
@@ -174,7 +201,7 @@ public class GoodsFragment extends BaseFragment {
 //                            holder.setBackgroundColor(R.id.iv_left,Color.argb(255,245,245,245));
 //                            holder.setBackgroundColor(R.id.tv_title,Color.argb(255,245,245,245));
 //                        }
-                        holder.setText(R.id.tv_title,s);
+                        holder.setText(R.id.tv_title, s);
                     }
                 });
                 adapter = new FoodAdapter(x.app(), foods);
@@ -200,16 +227,16 @@ public class GoodsFragment extends BaseFragment {
         });
     }
 
-    private void setLeft(int position){
+    private void setLeft(int position) {
         int color = Color.argb(255, 245, 245, 245);
         for (int i = 0; i < lv_left.getChildCount(); i++) {
             View view = lv_left.getChildAt(i);
             ImageView iv_left = (ImageView) view.findViewById(R.id.iv_left);
             TextView tv_left = (TextView) view.findViewById(R.id.tv_title);
-            if (i == position){
+            if (i == position) {
                 tv_left.setBackgroundColor(Color.WHITE);
                 iv_left.setBackgroundColor(Color.RED);
-            }else {
+            } else {
                 tv_left.setBackgroundColor(color);
                 iv_left.setBackgroundColor(color);
             }

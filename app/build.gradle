@@ -34,4 +34,5 @@ dependencies {
     compile 'it.neokree:MaterialTabs:0.11'
     compile 'com.wx.ovalimageview:roundimageview:1.1.0'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
 }

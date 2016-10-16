@@ -5,8 +5,8 @@ package com.oaec.waimai.util;
  * Description：
  */
 public class WaiMaiConfig {
-    public static final String URL = "http://10.0.6.81:8080/wm";
-//    public static final String URL = "http://192.168.31.165:8080/wm";
+//    public static final String URL = "http://10.0.6.81:8080/wm";
+    public static final String URL = "http://192.168.31.165:8080/wm";
     public static final String URL_BANNER = URL+"/home/banner";
     public static final String URL_MERCHANT_ALL = URL+"/home/merchant_All";
     public static final String URL_MERCHANT_LIMIT = URL+"/home/merchant_Limit";

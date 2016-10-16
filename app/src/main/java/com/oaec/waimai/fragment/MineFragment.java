@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.oaec.waimai.R;
 import com.oaec.waimai.activity.LoginActivity;
+import com.oaec.waimai.activity.SettingActivity;
 import com.oaec.waimai.util.WaiMaiConfig;
 import com.umeng.analytics.MobclickAgent;
 import com.wx.ovalimageview.RoundImageView;
@@ -36,6 +38,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private TextView tv_nickName;
     @ViewInject(R.id.riv_border)
     private RoundImageView riv_border;
+    @ViewInject(R.id.ib_setting)
+    private ImageButton ib_setting;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -45,6 +49,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     private void initEvent() {
         btn_toLogin.setOnClickListener(this);
+        ib_setting.setOnClickListener(this);
     }
 
     @Override
@@ -63,6 +68,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
+
             case REQ_LOGIN:
                 if(resultCode == Activity.RESULT_OK){
                     String nickName = data.getStringExtra("nickName");
@@ -86,6 +92,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            case R.id.ib_setting:
+                Intent intent1 = new Intent(getActivity(), SettingActivity.class);
+                startActivity(intent1);
+                break;
             case R.id.btn_toLogin:
                 Intent intent = new Intent(x.app(), LoginActivity.class);
                 startActivityForResult(intent,REQ_LOGIN);

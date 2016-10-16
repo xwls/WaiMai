@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
@@ -165,6 +166,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void initMerchant() {
+        View header = LayoutInflater.from(getActivity()).inflate(R.layout.home_list_header, null);
+        loadListView.addHeaderView(header);
         list = new ArrayList<Merchant>();
         adapter = new CommonAdapter<Merchant>(x.app(), list, R.layout.list_item_merchant) {
             @Override
@@ -201,7 +204,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Merchant merchant = list.get(position);
+        if (position == 0){
+            return;
+        }
+        Merchant merchant = list.get(position-1);
         Intent intent = new Intent(x.app(), MerchantActivity.class);
         intent.putExtra("id",merchant.getId());
         intent.putExtra("name",merchant.getName());

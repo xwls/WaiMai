@@ -1,6 +1,7 @@
 package com.oaec.waimai.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import java.util.List;
  * Description：
  */
 public class FoodAdapter extends SectionedBaseAdapter {
+    private static final String TAG = "FoodAdapter";
     private List<Food> foods;
     private Context context;
 
@@ -35,17 +37,20 @@ public class FoodAdapter extends SectionedBaseAdapter {
     }
 
     public FoodAdapter(Context context, List<Food> foods) {
+        Log.d(TAG, "FoodAdapter() called with: " + "foods = [" + foods + "]");
         this.context = context;
         this.foods = foods;
     }
 
     @Override
     public Object getItem(int section, int position) {
+        Log.d(TAG, "getItem() called with: " + "section = [" + section + "], position = [" + position + "]");
         return foods.get(section).getFoods().get(position);
     }
 
     @Override
     public long getItemId(int section, int position) {
+        Log.d(TAG, "getItemId() called with: " + "section = [" + section + "], position = [" + position + "]");
         return foods.get(section).getFoods().get(position).getId();
     }
 
@@ -76,15 +81,26 @@ public class FoodAdapter extends SectionedBaseAdapter {
         }else{
             holder = (ViewHolder) convertView.getTag();
         }
-        FoodInfo foodInfo = foods.get(section).getFoods().get(position);
+        FoodInfo info = foods.get(section).getFoods().get(position);
         ImageOptions options = new ImageOptions.Builder()
                 .setSize(DensityUtil.dip2px(82), DensityUtil.dip2px(82))
                 .setUseMemCache(true)
                 .build();
-        x.image().bind(holder.iv_img,foodInfo.getImg(),options);
-        holder.tv_name.setText(foodInfo.getName());
-        holder.tv_xl.setText("月售"+foodInfo.getXl()+"份");
-        holder.tv_price.setText("￥"+foodInfo.getPrice());
+        x.image().bind(holder.iv_img,info.getImg(),options);
+        String name = info.getName();
+        if(name.indexOf("?") > 0){
+            holder.tv_count.setText(name.substring(name.lastIndexOf("?")+1));
+            name = name.substring(0,name.lastIndexOf("?"));
+            holder.ib_sub.setVisibility(View.VISIBLE);
+            holder.tv_count.setVisibility(View.VISIBLE);
+        }else{
+            holder.ib_sub.setVisibility(View.INVISIBLE);
+            holder.tv_count.setVisibility(View.INVISIBLE);
+        }
+        holder.tv_name.setText(name);
+        holder.tv_xl.setText("月售"+info.getXl()+"份");
+        holder.tv_price.setText("￥"+info.getPrice());
+//        holder.tv_count.setText(info.getCount()+"");
         if (onConvertListener != null){
             onConvertListener.onConvert(holder,section,position);
         }
@@ -109,8 +125,13 @@ public class FoodAdapter extends SectionedBaseAdapter {
         return layout;
     }
 
+    public void onDataSetChanged(List<Food> foods){
+        this.foods = foods;
+        this.notifyDataSetChanged();
+    }
+
     public class ViewHolder{
-        ImageView iv_img;
+        public ImageView iv_img;
         TextView tv_name;
         TextView tv_xl;
         TextView tv_price;

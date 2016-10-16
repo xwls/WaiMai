@@ -10,8 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textItem"
-        android:height="60dp"
-        android:layout_marginBottom="60dp"
+        android:height="50dp"
         android:gravity="center_vertical"
         android:textColor="#FF000000"
         android:background="#FFF"/>
