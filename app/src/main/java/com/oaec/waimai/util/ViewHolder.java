@@ -106,6 +106,12 @@ public class ViewHolder {
         return this;
     }
 
+    public ViewHolder setonClickListener(int viewId, View.OnClickListener onClickListener){
+        View view = getView(viewId);
+        view.setOnClickListener(onClickListener);
+        return this;
+    }
+
     public ViewHolder setImageUrl(int viewId,String url){
         ImageView view = getView(viewId, ImageView.class);
         ImageOptions options = new ImageOptions.Builder()

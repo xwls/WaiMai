@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="6dp"
+        android:layout_height="6dp"
+        android:layout_marginStart="14dp"
+        android:layout_gravity="center"
+        android:background="@drawable/shape_dot"/>
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="2"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:text="柠檬冰冻"
+        android:paddingStart="10dp"
+        android:gravity="center_vertical"/>
+    <TextView
+        android:id="@+id/tv_price"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textColor="#ff2e4b"
+        android:text="￥9"/>
+
+    <ImageButton
+        android:id="@+id/ib_sub"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="4dp"
+        android:background="@null"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        android:src="@drawable/sel_ib_sub"/>
+
+    <TextView
+        android:id="@+id/tv_count"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:gravity="center"
+        android:text="0"
+        android:textColor="@color/text_1"/>
+
+    <ImageButton
+        android:id="@+id/ib_add"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@null"
+        android:layout_marginEnd="10dp"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center"
+        android:src="@drawable/sel_ib_add"/>
+
+</LinearLayout>

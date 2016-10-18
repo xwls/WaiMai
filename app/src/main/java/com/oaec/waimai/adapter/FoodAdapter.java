@@ -44,13 +44,14 @@ public class FoodAdapter extends SectionedBaseAdapter {
 
     @Override
     public Object getItem(int section, int position) {
-        Log.d(TAG, "getItem() called with: " + "section = [" + section + "], position = [" + position + "]");
         return foods.get(section).getFoods().get(position);
     }
 
     @Override
     public long getItemId(int section, int position) {
-        Log.d(TAG, "getItemId() called with: " + "section = [" + section + "], position = [" + position + "]");
+        if (position == -1){
+            return 0;
+        }
         return foods.get(section).getFoods().get(position).getId();
     }
 
@@ -67,8 +68,8 @@ public class FoodAdapter extends SectionedBaseAdapter {
     @Override
     public View getItemView(int section, int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
-        if(convertView == null){
-            convertView = LayoutInflater.from(context).inflate(R.layout.list_item_right,null);
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.list_item_right, null);
             holder = new ViewHolder();
             holder.iv_img = (ImageView) convertView.findViewById(R.id.iv_img);
             holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
@@ -78,37 +79,55 @@ public class FoodAdapter extends SectionedBaseAdapter {
             holder.tv_count = (TextView) convertView.findViewById(R.id.tv_count);
             holder.ib_add = (ImageButton) convertView.findViewById(R.id.ib_add);
             convertView.setTag(holder);
-        }else{
+        } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        FoodInfo info = foods.get(section).getFoods().get(position);
+        final FoodInfo info = foods.get(section).getFoods().get(position);
         ImageOptions options = new ImageOptions.Builder()
                 .setSize(DensityUtil.dip2px(82), DensityUtil.dip2px(82))
                 .setUseMemCache(true)
                 .build();
-        x.image().bind(holder.iv_img,info.getImg(),options);
+        x.image().bind(holder.iv_img, info.getImg(), options);
         String name = info.getName();
-        if(name.indexOf("?") > 0){
-            holder.tv_count.setText(name.substring(name.lastIndexOf("?")+1));
-            name = name.substring(0,name.lastIndexOf("?"));
+        if (name.indexOf("?") > 0) {
+            holder.tv_count.setText(name.substring(name.lastIndexOf("?") + 1));
+            name = name.substring(0, name.lastIndexOf("?"));
             holder.ib_sub.setVisibility(View.VISIBLE);
             holder.tv_count.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             holder.ib_sub.setVisibility(View.INVISIBLE);
             holder.tv_count.setVisibility(View.INVISIBLE);
         }
         holder.tv_name.setText(name);
-        holder.tv_xl.setText("月售"+info.getXl()+"份");
-        holder.tv_price.setText("￥"+info.getPrice());
+        holder.tv_xl.setText("月售" + info.getXl() + "份");
+        holder.tv_price.setText("￥" + info.getPrice());
 //        holder.tv_count.setText(info.getCount()+"");
-        if (onConvertListener != null){
-            onConvertListener.onConvert(holder,section,position);
-        }
+        final ViewHolder finalHolder = holder;
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.ib_add://+
+                        if (onConvertListener != null) {
+                            onConvertListener.clickAdd(info, finalHolder.iv_img,finalHolder.ib_sub, finalHolder.tv_count);
+                        }
+                        break;
+                    case R.id.ib_sub://-
+                        if (onConvertListener != null) {
+                            onConvertListener.clickSub(info, finalHolder.ib_sub, finalHolder.tv_count);
+                        }
+                        break;
+                }
+            }
+        };
+        holder.ib_add.setOnClickListener(onClickListener);
+        holder.ib_sub.setOnClickListener(onClickListener);
         return convertView;
     }
 
-    public interface OnConvertListener{
-        void onConvert(ViewHolder holder, int section, int position);
+    public interface OnConvertListener {
+        void clickAdd(FoodInfo foodInfo,ImageView imageView,ImageButton ib_sub,TextView tv_count);
+        void clickSub(FoodInfo foodInfo, ImageButton ib_sub,TextView tv_count);
     }
 
     @Override
@@ -125,12 +144,12 @@ public class FoodAdapter extends SectionedBaseAdapter {
         return layout;
     }
 
-    public void onDataSetChanged(List<Food> foods){
+    public void onDataSetChanged(List<Food> foods) {
         this.foods = foods;
         this.notifyDataSetChanged();
     }
 
-    public class ViewHolder{
+    public class ViewHolder {
         public ImageView iv_img;
         TextView tv_name;
         TextView tv_xl;

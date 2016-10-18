@@ -2,10 +2,9 @@ package com.oaec.waimai.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -14,18 +13,15 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.oaec.waimai.R;
 import com.oaec.waimai.adapter.FoodAdapter;
+import com.oaec.waimai.entity.Cart;
 import com.oaec.waimai.entity.Food;
 import com.oaec.waimai.entity.FoodInfo;
 import com.oaec.waimai.util.CommonAdapter;
 import com.oaec.waimai.util.ViewHolder;
-import com.oaec.waimai.util.WaiMaiConfig;
 import com.oaec.waimai.widget.PinnedHeaderListView;
 
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
@@ -48,7 +44,9 @@ public class GoodsFragment extends BaseFragment {
     private FoodAdapter adapter;
     private boolean isScroll;
     private List<Food> foods;
+    private List<Cart> carts;
     private Add2ShoppingCartListener add2ShoppingCartListener;
+    private int id;
 
     public void setAdd2ShoppingCartListener(Add2ShoppingCartListener add2ShoppingCartListener) {
         this.add2ShoppingCartListener = add2ShoppingCartListener;
@@ -59,14 +57,13 @@ public class GoodsFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         Bundle bundle = getArguments();
         String name = bundle.getString("name");
-        int id = bundle.getInt("id");
-        foods = new ArrayList<Food>();
-        getFoods(id);
-//        initEvent();
+        id = bundle.getInt("id");
+        foods = new ArrayList<>();
+        carts = new ArrayList<>();
+        adapter = new FoodAdapter(getActivity(), foods);
+        lv_right.setAdapter(adapter);
         LayoutInflater inflator = LayoutInflater.from(x.app());
         LinearLayout footer = (LinearLayout) inflator.inflate(R.layout.list_item, null);
-//        ((TextView) footer.findViewById(R.id.textItem)).setText("FOOTER");
-//        lv_left.addFooterView(footer);
         lv_right.addFooterView(footer);
     }
 
@@ -101,130 +98,165 @@ public class GoodsFragment extends BaseFragment {
         });
 
         adapter.setOnConvertListener(new FoodAdapter.OnConvertListener() {
+
             @Override
-            public void onConvert(final FoodAdapter.ViewHolder holder, int section, int position) {
-                final FoodInfo foodInfo = foods.get(section).getFoods().get(position);
-                View.OnClickListener onClickListener = new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        ImageButton ib_sub = holder.ib_sub;
-                        ImageButton ib_add = holder.ib_add;
-                        final TextView tv_count = holder.tv_count;
-                        int count = 0;
-                        String name = foodInfo.getName();
-                        if(name.indexOf("?") > 0){
-                            count = Integer.parseInt(name.substring(name.lastIndexOf("?")+1));
-                            name = name.substring(0,name.lastIndexOf("?"));
-                        }
-                        switch (v.getId()) {
-                            case R.id.ib_add://加入购物车
-                                if (!ib_sub.isShown()) {
-                                    ib_sub.setVisibility(View.VISIBLE);
-                                    ib_sub.setEnabled(true);
-                                    Animation animation = AnimationUtils.loadAnimation(x.app(), R.anim.anim_ib_sub_in);
-                                    ib_sub.startAnimation(animation);
-                                    animation.setAnimationListener(new Animation.AnimationListener() {
-                                        @Override
-                                        public void onAnimationStart(Animation animation) {
-
-                                        }
-
-                                        @Override
-                                        public void onAnimationEnd(Animation animation) {
-                                            tv_count.setVisibility(View.VISIBLE);
-                                        }
-
-                                        @Override
-                                        public void onAnimationRepeat(Animation animation) {
-
-                                        }
-                                    });
-                                }
-                                count += 1;
-                                break;
-                            case R.id.ib_sub:
-                                count -= 1;
-                                if (count == 0) {
-                                    tv_count.setVisibility(View.INVISIBLE);
-                                    Animation animation = AnimationUtils.loadAnimation(x.app(), R.anim.anim_ib_sub_out);
-                                    ib_sub.startAnimation(animation);
-                                    ib_sub.setVisibility(View.INVISIBLE);
-                                    ib_sub.setEnabled(false);
-                                }
-                                break;
-                        }
-                        if(count > 0){
-                            foodInfo.setName(name+"?"+count);
-                        }else {
-                            foodInfo.setName(name);
-                        }
-                        tv_count.setText(count + "");
-//                        foodInfo.setCount(count);
-//                        Log.d(TAG, "onClick: "+foodInfo+"--"+count);
-//                        adapter.notifyDataSetChanged();
-//                        FoodAdapter adapter = new FoodAdapter(x.app(), foods);
-//                        lv_right.setAdapter(adapter);
-                        if (add2ShoppingCartListener != null) {
-                            add2ShoppingCartListener.add2ShoppingCart(v, holder.iv_img, foodInfo, count);
-                        }
-                    }
-                };
-                holder.ib_add.setOnClickListener(onClickListener);
-                holder.ib_sub.setOnClickListener(onClickListener);
-            }
-        });
-    }
-
-    public interface Add2ShoppingCartListener {
-        void add2ShoppingCart(View v, ImageView imageView, FoodInfo foodInfo, int count);
-    }
-
-    private void getFoods(int id) {
-        RequestParams params = new RequestParams(WaiMaiConfig.URL_FOODS);
-        params.addParameter("mid", id);
-        x.http().get(params, new Callback.CommonCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-                foods = JSON.parseArray(result, Food.class);
-                List<String> types = new ArrayList<String>();
-                for (int i = 0; i < foods.size(); i++) {
-                    types.add(foods.get(i).getType());
+            public void clickAdd(FoodInfo foodInfo,ImageView imageView, ImageButton ib_sub, final TextView tv_count) {
+                if (add2ShoppingCartListener != null){
+                    add2ShoppingCartListener.addToCart(foodInfo,imageView,ib_sub,tv_count);
                 }
-                lv_left.setAdapter(new CommonAdapter<String>(x.app(), types, R.layout.list_item_left) {
-                    @Override
-                    public void convert(int position, ViewHolder holder, String s) {
-//                        if(position == 0){
-//                            holder.setBackgroundColor(R.id.iv_left,Color.RED);
-//                            holder.setBackgroundColor(R.id.tv_title,Color.WHITE);
-//                        }else{
-//                            holder.setBackgroundColor(R.id.iv_left,Color.argb(255,245,245,245));
-//                            holder.setBackgroundColor(R.id.tv_title,Color.argb(255,245,245,245));
-//                        }
-                        holder.setText(R.id.tv_title, s);
-                    }
-                });
-                adapter = new FoodAdapter(x.app(), foods);
-                lv_right.setAdapter(adapter);
-                setLeft(0);
-                initEvent();
             }
 
             @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-
-            }
-
-            @Override
-            public void onFinished() {
-
+            public void clickSub(FoodInfo foodInfo, ImageButton ib_sub, TextView tv_count) {
+                if (add2ShoppingCartListener != null){
+                    add2ShoppingCartListener.subFromCart(foodInfo,ib_sub,tv_count);
+                }
             }
         });
+
+//        adapter.setOnConvertListener(new FoodAdapter.OnConvertListener() {
+//            @Override
+//            public void onConvert(final FoodAdapter.ViewHolder holder, int section, int position) {
+//                final FoodInfo foodInfo = foods.get(section).getFoods().get(position);
+//                View.OnClickListener onClickListener = new View.OnClickListener() {
+//
+//                    @Override
+//                    public void onClick(View v) {
+//                        Log.d(TAG, "onClick() called with: " + "v = [" + v + "]");
+//                        ImageButton ib_sub = holder.ib_sub;
+//                        ImageButton ib_add = holder.ib_add;
+//                        final TextView tv_count = holder.tv_count;
+//                        int count = 0;
+//                        String name = foodInfo.getName();
+//                        if (name.indexOf("?") > 0) {
+//                            count = Integer.parseInt(name.substring(name.lastIndexOf("?") + 1));
+//                            name = name.substring(0, name.lastIndexOf("?"));
+//                        }
+//                        switch (v.getId()) {
+//                            case R.id.ib_add://加入购物车
+//                                if (!ib_sub.isShown()) {
+//                                    ib_sub.setVisibility(View.VISIBLE);
+//                                    ib_sub.setEnabled(true);
+//                                    Animation animation = AnimationUtils.loadAnimation(x.app(), R.anim.anim_ib_sub_in);
+//                                    ib_sub.startAnimation(animation);
+//                                    animation.setAnimationListener(new Animation.AnimationListener() {
+//                                        @Override
+//                                        public void onAnimationStart(Animation animation) {
+//
+//                                        }
+//
+//                                        @Override
+//                                        public void onAnimationEnd(Animation animation) {
+//                                            tv_count.setVisibility(View.VISIBLE);
+//                                        }
+//
+//                                        @Override
+//                                        public void onAnimationRepeat(Animation animation) {
+//
+//                                        }
+//                                    });
+//                                }
+//                                count += 1;
+//                                break;
+//                            case R.id.ib_sub:
+//                                count -= 1;
+//                                if (count == 0) {
+//                                    tv_count.setVisibility(View.INVISIBLE);
+//                                    Animation animation = AnimationUtils.loadAnimation(x.app(), R.anim.anim_ib_sub_out);
+//                                    ib_sub.startAnimation(animation);
+//                                    ib_sub.setVisibility(View.INVISIBLE);
+//                                    ib_sub.setEnabled(false);
+//                                }
+//                                break;
+//                        }
+//                        if (count > 0) {
+//                            foodInfo.setName(name + "?" + count);
+//                        } else {
+//                            foodInfo.setName(name);
+//                        }
+////                        tv_count.setText(count + "");
+////                        foodInfo.setCount(count);
+////                        Log.d(TAG, "onClick: "+foodInfo+"--"+count);
+//                        adapter.notifyDataSetChanged();
+////                        FoodAdapter adapter = new FoodAdapter(x.app(), foods);
+////                        lv_right.setAdapter(adapter);
+//                        if (add2ShoppingCartListener != null) {
+//                            add2ShoppingCartListener.add2ShoppingCart(v, holder.iv_img, foodInfo, count);
+//                        }
+//                    }
+//                };
+//                holder.ib_add.setOnClickListener(onClickListener);
+//                holder.ib_sub.setOnClickListener(onClickListener);
+//            }
+//        });
+    }
+
+    public void notifyDataSetChanged(){
+        adapter.onDataSetChanged(foods);
+        Log.d(TAG, "notifyDataSetChanged: ");
+    }
+    
+    public interface Add2ShoppingCartListener {
+        void addToCart(FoodInfo foodInfo,ImageView imageView, ImageButton ib_sub, final TextView tv_count);
+        void subFromCart(FoodInfo foodInfo, ImageButton ib_sub, TextView tv_count);
+    }
+
+    /**
+     * 宿主Activity请求到购物车数据之后执行
+     *
+     * @param carts
+     */
+    public void initCarts(List<Cart> carts, List<Food> foods) {
+        setCount(carts, foods);
+        this.carts = carts;
+        this.foods = foods;
+        Log.d(TAG, "initCarts() called with: " + "carts = [" + carts + "], foods = [" + foods + "]");
+//        adapter.onDataSetChanged(this.foods);
+        if (lv_left.getAdapter() == null) {
+            List<String> types = new ArrayList<>();
+            for (Food food : foods) {
+                types.add(food.getType());
+            }
+            lv_left.setAdapter(new CommonAdapter<String>(getActivity(), types, R.layout.list_item_left) {
+                @Override
+                public void convert(int position, ViewHolder holder, String s) {
+                    holder.setText(R.id.tv_title, s);
+                }
+            });
+            setLeft(0);
+        }
+        adapter = new FoodAdapter(getActivity(), this.foods);
+        lv_right.setAdapter(adapter);
+        initEvent();
+    }
+
+
+    /**
+     * 根据购物车中商品的数量设置到商品属性
+     *
+     * @param carts
+     * @param foods
+     */
+    private void setCount(List<Cart> carts, List<Food> foods) {
+        if (carts != null && carts.size() > 0 && foods != null && foods.size() > 0) {
+            for (int i = 0; i < carts.size(); i++) {
+                Cart cart = carts.get(i);
+                int fid = cart.getFid();
+                for (int j = 0; j < foods.size(); j++) {
+                    List<FoodInfo> foodInfos = foods.get(j).getFoods();
+                    for (int k = 0; k < foodInfos.size(); k++) {
+                        FoodInfo foodInfo = foodInfos.get(k);
+                        if (foodInfo.getId() == fid) {
+                            String name = foodInfo.getName();
+                            if (name.contains("?")) {
+                                name = name.substring(0, name.lastIndexOf("?"));
+                            }
+                            foodInfo.setName(name + "?" + cart.getCount());
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void setLeft(int position) {

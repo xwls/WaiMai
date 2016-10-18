@@ -119,6 +119,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         });
     }
 
+    /**
+     * 获取商家列表
+     * @param pno
+     */
     private void getMerchant(int pno) {
         RequestParams params = new RequestParams(WaiMaiConfig.URL_MERCHANT_LIMIT);
         params.addParameter("pno", pno);
@@ -159,6 +163,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
 //                adapter.notifyDataSetChanged();
                     list.addAll(merchants);
                     adapter.onDataSetChanged(list);
+                    //根据ListViewITEM的数量动态设置ListView的高度
                     DensityUtils.setListViewHeightBasedOnChildren(loadListView);
                 }
             }

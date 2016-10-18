@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#e9e9e9">
+        <TextView
+            android:id="@+id/tv_icon"
+            android:layout_width="4dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@color/colorAccent"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="购物车"
+            android:textColor="@color/text_1"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/tv_icon"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingEnd="10dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true">
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="18dp"
+                android:scaleType="centerCrop"
+                android:layout_marginEnd="6dp"
+                android:src="@drawable/ic_cart_delete"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="清空"
+                android:textColor="@color/text_1"
+                android:gravity="center"/>
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/lv_cart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </ListView>
+
+    <include layout="@layout/layout_cart_bottom"/>
+
+</LinearLayout>
