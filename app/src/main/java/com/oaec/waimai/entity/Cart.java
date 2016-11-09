@@ -25,6 +25,31 @@ public class Cart {
         this.count = count;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Cart cart = (Cart) o;
+
+        if (id != cart.id) return false;
+        if (fid != cart.fid) return false;
+        if (Float.compare(cart.price, price) != 0) return false;
+        if (count != cart.count) return false;
+        return name != null ? name.equals(cart.name) : cart.name == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + fid;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (price != +0.0f ? Float.floatToIntBits(price) : 0);
+        result = 31 * result + count;
+        return result;
+    }
+
     public Cart() {
     }
 

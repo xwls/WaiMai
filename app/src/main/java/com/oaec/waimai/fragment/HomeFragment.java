@@ -162,6 +162,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                     List<Merchant> merchants = JSON.parseArray(result, Merchant.class);
 //                adapter.notifyDataSetChanged();
                     list.addAll(merchants);
+                    loadListView.loadComplete();
                     adapter.onDataSetChanged(list);
                     //根据ListViewITEM的数量动态设置ListView的高度
                     DensityUtils.setListViewHeightBasedOnChildren(loadListView);
@@ -192,14 +193,14 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void onLoad() {
+        //上拉翻页
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 pno += 1;
                 getMerchant(pno);
-                loadListView.loadComplete();
             }
-        }, 1000);
+        }, 500);
     }
 
     @Override

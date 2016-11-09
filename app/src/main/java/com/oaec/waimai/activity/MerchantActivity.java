@@ -156,34 +156,63 @@ public class MerchantActivity extends AppCompatActivity implements MaterialTabLi
             public void onSuccess(String result) {
                 Log.d(TAG, "onSuccess() called with: " + "result = [" + result + "]");
                 carts = JSON.parseArray(result, Cart.class);
-                if(isFirstOpen){
+                if (isFirstOpen) {
                     f1.initCarts(carts, foods);
                     initCartDetail(carts);
                     isFirstOpen = false;
                 }
-                if (cartAdapter == null){
-                    cartAdapter = new CommonAdapter<Cart>(MerchantActivity.this,carts,R.layout.cart_item) {
+                if (cartAdapter == null) {
+                    cartAdapter = new CommonAdapter<Cart>(MerchantActivity.this, carts, R.layout.cart_item) {
                         @Override
-                        public void convert(int position, ViewHolder holder, Cart cart) {
-                            holder.setText(R.id.tv_name,cart.getName())
-                                    .setText(R.id.tv_price,cart.getCount()*cart.getPrice())
-                                    .setText(R.id.tv_count,cart.getCount());
+                        public void convert(int position, ViewHolder holder, final Cart cart) {
+                            View.OnClickListener listener = new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    FoodInfo foodInfo = getFoodInfoByFid(cart.getFid());
+                                    String url = null;
+
+                                    Log.d(TAG, "cart: " + cart);
+                                    int count = cart.getCount();
+                                    switch (v.getId()) {
+                                        case R.id.ib_add:
+                                            url = WaiMaiConfig.URL_CART_ADD;
+                                            cart.setCount(count+1);
+                                            break;
+                                        case R.id.ib_sub:
+                                            url = WaiMaiConfig.URL_CART_SUB;
+                                            count--;
+                                            if(count == 0){
+                                                carts.remove(cart);
+                                            }else {
+                                                cart.setCount(count);
+                                            }
+                                            break;
+                                    }
+                                    updateCart(url,foodInfo,null,null);
+                                    cartAdapter.onDataSetChanged(carts);
+                                }
+                            };
+                            holder.setText(R.id.tv_name, cart.getName())
+                                    .setText(R.id.tv_price, cart.getCount() * cart.getPrice())
+                                    .setText(R.id.tv_count, cart.getCount())
+                                    .setonClickListener(R.id.ib_add, listener)
+                                    .setonClickListener(R.id.ib_sub, listener);
                         }
                     };
                     lv_pop_cart.setAdapter(cartAdapter);
-                }else {
+                } else {
                     cartAdapter.onDataSetChanged(carts);
                     int size = carts.size();
-                    if (size>5){
+                    if (size > 5) {
                         size = 5;
                         ViewGroup.LayoutParams params = lv_pop_cart.getLayoutParams();
-                        params.height = DensityUtil.dip2px(46*5);
+                        params.height = DensityUtil.dip2px(50 * 5);
                         lv_pop_cart.setLayoutParams(params);
                     }
-                    int height = DensityUtil.dip2px(50* size)+DensityUtil.dip2px(100);
+                    int height = DensityUtil.dip2px(50 * size) + DensityUtil.dip2px(110);
                     popupWindow.setHeight(height);
 
-                    popupWindow.showAsDropDown(layout_cart,0,-DensityUtil.dip2px(48));
+                    popupWindow.showAsDropDown(layout_cart, 0, -DensityUtil.dip2px(48));
                     backgroundAlpha(0.4f);
                 }
             }
@@ -205,16 +234,31 @@ public class MerchantActivity extends AppCompatActivity implements MaterialTabLi
         });
     }
 
+    private FoodInfo getFoodInfoByFid(int fid) {
+        for (int i = 0; i < foods.size(); i++) {
+            List<FoodInfo> foods = MerchantActivity.this.foods.get(i).getFoods();
+            for (int j = 0; j < foods.size(); j++) {
+                FoodInfo foodInfo = foods.get(j);
+                if (foodInfo.getId() == fid) {
+                    Log.d(TAG, "foodInfo: " + foodInfo);
+                    return foodInfo;
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * 设置下方购物车信息的内容显示
+     *
      * @param carts
      */
     private void initCartDetail(List<Cart> carts) {
         totalCount = 0;
         totalPrice = 0;
-        for (Cart cart: carts) {
+        for (Cart cart : carts) {
             totalCount += cart.getCount();
-            totalPrice += cart.getPrice()*cart.getCount();
+            totalPrice += cart.getPrice() * cart.getCount();
         }
         initCartDetail();
     }
@@ -226,27 +270,27 @@ public class MerchantActivity extends AppCompatActivity implements MaterialTabLi
 //            totalCount += cart.getCount();
 //            totalPrice += cart.getPrice()*cart.getCount();
 //        }
-        if(totalCount > 0){
+        if (totalCount > 0) {
             iv_cart.setImageResource(R.drawable.ic_cart_red);
             iv_pop_cart.setImageResource(R.drawable.ic_cart_red);
             tv_dot.setVisibility(View.VISIBLE);
             tv_pop_dot.setVisibility(View.VISIBLE);
-            tv_dot.setText(totalCount+"");
-            tv_pop_dot.setText(totalCount+"");
-            tv_totalPrice.setText("共：￥"+totalPrice);
-            tv_pop_totalPrice.setText("共：￥"+totalPrice);
-            if(totalPrice >= qs && totalCount > 0){
+            tv_dot.setText(totalCount + "");
+            tv_pop_dot.setText(totalCount + "");
+            tv_totalPrice.setText("共：￥" + totalPrice);
+            tv_pop_totalPrice.setText("共：￥" + totalPrice);
+            if (totalPrice >= qs && totalCount > 0) {
                 btn_ok.setEnabled(true);
                 btn_pop_ok.setEnabled(true);
                 btn_ok.setText("去下单");
                 btn_pop_ok.setText("去下单");
-            }else {
+            } else {
                 btn_ok.setEnabled(false);
                 btn_pop_ok.setEnabled(false);
-                btn_ok.setText("还差￥"+(qs - totalPrice)+"起送");
-                btn_pop_ok.setText("还差￥"+(qs - totalPrice)+"起送");
+                btn_ok.setText("还差￥" + (qs - totalPrice) + "起送");
+                btn_pop_ok.setText("还差￥" + (qs - totalPrice) + "起送");
             }
-        }else {
+        } else {
             iv_cart.setImageResource(R.drawable.ic_cart);
             iv_pop_cart.setImageResource(R.drawable.ic_cart);
             tv_dot.setVisibility(View.INVISIBLE);
@@ -257,8 +301,8 @@ public class MerchantActivity extends AppCompatActivity implements MaterialTabLi
             tv_pop_totalPrice.setText("购物车是空的");
             btn_ok.setEnabled(false);
             btn_pop_ok.setEnabled(false);
-            btn_ok.setText("￥"+qs+"起送");
-            btn_pop_ok.setText("￥"+qs+"起送");
+            btn_ok.setText("￥" + qs + "起送");
+            btn_pop_ok.setText("￥" + qs + "起送");
         }
     }
 
@@ -346,19 +390,19 @@ public class MerchantActivity extends AppCompatActivity implements MaterialTabLi
 
     @Override
     public void addToCart(FoodInfo foodInfo, ImageView imageView, ImageButton ib_sub, final TextView tv_count) {
-        updateCart(WaiMaiConfig.URL_CART_ADD,foodInfo,imageView,ib_sub);
+        updateCart(WaiMaiConfig.URL_CART_ADD, foodInfo, imageView, ib_sub);
     }
 
     @Override
     public void subFromCart(FoodInfo foodInfo, ImageButton ib_sub, TextView tv_count) {
-        updateCart(WaiMaiConfig.URL_CART_SUB,foodInfo,null,ib_sub);
+        updateCart(WaiMaiConfig.URL_CART_SUB, foodInfo, null, ib_sub);
     }
 
-    private void updateCart(String url, final FoodInfo foodInfo, final ImageView imageView, final ImageButton ib_sub){
+    private void updateCart(String url, final FoodInfo foodInfo, final ImageView imageView, final ImageButton ib_sub) {
         RequestParams params = new RequestParams(url);
-        params.addParameter("uid",1);
-        params.addParameter("mid",1);
-        params.addParameter("fid",foodInfo.getId());
+        params.addParameter("uid", 1);
+        params.addParameter("mid", id);
+        params.addParameter("fid", foodInfo.getId());
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String json) {
@@ -366,17 +410,16 @@ public class MerchantActivity extends AppCompatActivity implements MaterialTabLi
                 try {
                     JSONObject jsonObject = new JSONObject(json);
                     String result = jsonObject.getString("result");
-                    if(result.equals("AddSuccess")){
-                        if (!ib_sub.isShown()) {
+                    if (result.equals("AddSuccess")) {
+                        if (ib_sub != null && !ib_sub.isShown()) {
                             ib_sub.setVisibility(View.VISIBLE);
                             ib_sub.setEnabled(true);
                             Animation animation = AnimationUtils.loadAnimation(x.app(), R.anim.anim_ib_sub_in);
                             ib_sub.startAnimation(animation);
-
                         }
                         Log.d(TAG, "addToCart() called with: " + "foodInfo = [" + foodInfo + "], imageView = [" + imageView + "], ib_sub = [" + ib_sub + "]");
-                        if(imageView != null){
-                            AddCartAnimation.AddToCart(imageView,iv_cart,MerchantActivity.this,mRl,1);
+                        if (imageView != null) {
+                            AddCartAnimation.AddToCart(imageView, iv_cart, MerchantActivity.this, mRl, 1);
                         }
                         String name = foodInfo.getName();
                         int count = 0;
@@ -389,10 +432,10 @@ public class MerchantActivity extends AppCompatActivity implements MaterialTabLi
                         foodInfo.setName(name + "?" + count);
                         f1.notifyDataSetChanged();
                         totalCount++;
-                        totalPrice+=foodInfo.getPrice();
+                        totalPrice += foodInfo.getPrice();
                         initCartDetail();
                         Log.d(TAG, "addToCart: " + count + "--" + name);
-                    }else if (result.equals("SubSuccess")){
+                    } else if (result.equals("SubSuccess")) {
                         Log.d(TAG, "subFromCart() called with: " + "foodInfo = [" + foodInfo + "], ib_sub = [" + ib_sub + "]");
                         String name = foodInfo.getName();
                         int count = 0;
@@ -405,12 +448,14 @@ public class MerchantActivity extends AppCompatActivity implements MaterialTabLi
                             foodInfo.setName(name);
 //                            tv_count.setVisibility(View.INVISIBLE);
                             Animation animation = AnimationUtils.loadAnimation(x.app(), R.anim.anim_ib_sub_out);
-                            ib_sub.startAnimation(animation);
-                            ib_sub.setVisibility(View.INVISIBLE);
-                            ib_sub.setEnabled(false);
+                            if (ib_sub != null){
+                                ib_sub.startAnimation(animation);
+                                ib_sub.setVisibility(View.INVISIBLE);
+                                ib_sub.setEnabled(false);
+                            }
                         }
                         totalCount--;
-                        totalPrice-=foodInfo.getPrice();
+                        totalPrice -= foodInfo.getPrice();
                         initCartDetail();
                         f1.notifyDataSetChanged();
                     }
